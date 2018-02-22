@@ -1,5 +1,6 @@
 -- lexit.lua
 -- Samuel J Grenon
+-- 2/19/2018
 --
 
 -- *********************************************************************
@@ -10,7 +11,7 @@
 local lexit = {}  -- Our module; members are added below
 local preferOpFlag = false
 
-function lexit.preferOP()
+function lexit.preferOp()
     preferOpFlag = true
 end
 
@@ -148,7 +149,7 @@ function lexit.lex(program)
     local STRLIT = 8
     local DOT = 9
     local OPERATOR = 10
-    local DBLOPERATOR = 11.
+    local DBLOPERATOR = 11
 
     -- ***** Character-Related Utility Functions *****
 
@@ -419,6 +420,7 @@ function lexit.lex(program)
         preferOpFlag = false
         return lexstr, category
     end
+    
 
     -- ***** Body of Function lex *****
 
@@ -426,6 +428,7 @@ function lexit.lex(program)
     pos = 1
     skipWhitespace()
     return getLexeme, nil, nil
+
 end
 
 
