@@ -1,5 +1,5 @@
 -- parseit.lua
--- Glenn G. Chappell
+-- Samuel Grenon
 -- 16 Feb 2018
 --
 -- For CS F331 / CSCE A331 Spring 2018
@@ -206,7 +206,18 @@ local ARRAY_VAR   = 16
         return true, ast
     end
     
-    
+    function parse_comp_expr()
+        local good, ast, saveop, newast
+        if matchString("!") then
+            good, ast = parse_comp_expr()
+            if not good then
+                return false, nil
+            end
+            return true, { {UN_OP, "!"}, ast }
+        end
+    end
+
+
     -- parse_term
     -- Parsing function for nonterminal "term".
     -- Function init must be called before this function is called.
@@ -275,9 +286,7 @@ function parse_program()
 end
 
 -- parse_stmt_list
-
 -- Parsing function for nonterminal "stmt_list".
-
 -- Function init must be called before this function is called.
 
 function parse_stmt_list()
@@ -331,7 +340,16 @@ function parse_statement()
             table.insert(ast2, ast1)
         end
         return true, ast2
-  --  elseif matchString("func") then
+    elseif matchString("call") then 
+        savelex = lexstr
+        if not matchCat(lexit.ID) then
+            return false, nil
+        end
+        ast1 = {CALL_FUNC, savelex}
+        return true, ast1
+
+    elseif matchCat(lexit.ID) then
+        return false, nil
   end
 end
 
@@ -341,19 +359,20 @@ function parse_lvalue()
     if matchCat(lexit.ID) then
         ast = {SIMPLE_VAR, savelex}
         if not matchString("[") then
-            return true, ast
+             return true, ast
         end
         good, newast = parse_expr()
         if not good then
-            return false, nil
+           return false, nil
         end
-        if not matchString("]") then
+       if not matchString("]") then
             return false, nil
-        end
-        return true, {ARRAY_VAR, ast, newast}
+       end
+      return true, {ARRAY_VAR, savelex, newast}
     end
     return false, nil
 end
+
 
 function parse_print_arg()
     local savelex, good, ast, newast
@@ -362,6 +381,7 @@ function parse_print_arg()
         ast = {STRLIT_OUT, savelex}
         return true, ast
     end
+  --  if matchString(lexit.)
 
 end
 
