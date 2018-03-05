@@ -2,7 +2,7 @@
 --Grenon J. Samuel
 --6 Feb 2018
 
---For cs 331/ Programing Languages 
+---For cs 331/ Programing Languages 
 --This is the module for pa2_test.lua
 
 -- To use this module, do
