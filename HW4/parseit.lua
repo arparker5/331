@@ -206,18 +206,7 @@ local ARRAY_VAR   = 16
         return true, ast
     end
     
-    function parse_comp_expr()
-        local good, ast, saveop, newast
-        if matchString("!") then
-            good, ast = parse_comp_expr()
-            if not good then
-                return false, nil
-            end
-            return true, { {UN_OP, "!"}, ast }
-        end
-    end
-
-
+    
     -- parse_term
     -- Parsing function for nonterminal "term".
     -- Function init must be called before this function is called.
@@ -347,11 +336,24 @@ function parse_statement()
         end
         ast1 = {CALL_FUNC, savelex}
         return true, ast1
-
     elseif matchCat(lexit.ID) then
         return false, nil
+
+    elseif matchString("func") then
+        savelex = lexstr
+        if not matchCat(lexit.ID) then
+            return false, nil
+        end
+        good, ast2 = parse_stmt_list()
+        if not good then
+            return false, nil
+        end
+       -- good = matchString('end')
+		ast1 = { FUNC_STMT, savelex, ast2 }
+		return good, ast1
+    end   
   end
-end
+
 
 function parse_lvalue()
     local savelex, good, ast, newast
@@ -375,15 +377,25 @@ end
 
 
 function parse_print_arg()
-    local savelex, good, ast, newast
+    local good, ast, savelex
     savelex = lexstr
-    if matchString(lexit.STRLIT) then
-        ast = {STRLIT_OUT, savelex}
-        return true, ast
-    end
-  --  if matchString(lexit.)
-
+	if matchString('cr') then
+		ast = { CR_OUT }
+		good = true
+	elseif matchCat(lexit.STRLIT) then
+		ast = { STRLIT_OUT, savelex }
+		good = true
+	else
+		good, ast = parse_expr()
+		if not good then
+			return false, nil
+		end
+		ast = { PRINT_STMT, ast }
+		good = true
+	end
+	return good, ast
 end
+
 
 return parseit
 
