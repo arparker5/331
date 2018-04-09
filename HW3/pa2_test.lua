@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 -- pa2_test.lua
 -- Glenn G. Chappell
--- 4 Feb 2018
+---  4 Feb 2018
 --
 -- For CS F331 / CSCE A331 Spring 2018
 -- Test Program for Assignment 2 Functions
